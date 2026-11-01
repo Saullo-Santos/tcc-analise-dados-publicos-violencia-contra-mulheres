@@ -1,0 +1,6 @@
+pandas
+PyMySQL
+dotenv
+"fastapi[standard]"
+openpyxl
+
