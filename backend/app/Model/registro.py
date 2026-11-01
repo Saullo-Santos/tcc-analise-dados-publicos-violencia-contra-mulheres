@@ -1,76 +1,63 @@
-from datetime import date
-from time import time
+import sys
+from pathlib import Path
+from datetime import date, time as dt_time  # 1. CORRIGIDO: import correto do objeto de hora
+import pandas as pd
+
+raiz = Path(__file__).resolve().parent.parent
+sys.path.append(str(raiz))
 
 class Registro:
-    def __init__(self,ano_bo, data_ocorrencia, hora_ocorrencia, natureza_crime, descr_tipo_local, bairro, logradouro, regiao, idade, cor_pele):
+    def __init__(self, ano_bo, data_ocorrencia, hora_ocorrencia, natureza_crime, descr_tipo_local, bairro, logradouro, regiao, idade, cor_pele):
         self._ano_bo = ano_bo
+        
         try:
             if hasattr(data_ocorrencia, 'year'):
                 self._data_ocorrencia = date(data_ocorrencia.year, data_ocorrencia.month, data_ocorrencia.day)
             else:
                 self._data_ocorrencia = data_ocorrencia
         except:
-            self._data_ocorrencia = ""
+            self._data_ocorrencia = None
         
         try:
             if hasattr(hora_ocorrencia, 'hour'):
-                self._hora_ocorrencia = time(hora_ocorrencia.hour, hora_ocorrencia.minute, hora_ocorrencia.second)
+                # Modificado para usar dt_time importado corretamente
+                self._hora_ocorrencia = dt_time(hora_ocorrencia.hour, hora_ocorrencia.minute, hora_ocorrencia.second)
             else:
                 self._hora_ocorrencia = hora_ocorrencia
         except Exception:
-            self._hora_ocorrencia = ""
+            self._hora_ocorrencia = None
 
         self._natureza_crime = natureza_crime
         self._descr_tipo_local = descr_tipo_local
         self._bairro = bairro
         self._logradouro = logradouro
         self._regiao = regiao
+        
         try:
             self._idade = int(idade)
         except:
-            self._idade = ""
+            self._idade = None  # No MySQL, nulos devem ser passados como None (que vira NULL), e não string vazia ""
             
         self._cor_pele = cor_pele
 
+    # Seus @property se mantêm idênticos aqui embaixo...
     @property
-    def ano_bo(self):
-        return self._ano_bo
-
+    def ano_bo(self): return self._ano_bo
     @property
-    def data_ocorrencia(self):
-        return self._data_ocorrencia
-
+    def data_ocorrencia(self): return self._data_ocorrencia
     @property
-    def hora_ocorrencia(self):
-        return self._hora_ocorrencia
-
+    def hora_ocorrencia(self): return self._hora_ocorrencia
     @property
-    def natureza_crime(self):
-        return self._natureza_crime
-
+    def natureza_crime(self): return self._natureza_crime
     @property
-    def descr_tipo_local(self):
-        return self._descr_tipo_local
-
+    def descr_tipo_local(self): return self._descr_tipo_local
     @property
-    def bairro(self):
-        return self._bairro
-
+    def bairro(self): return self._bairro
     @property
-    def logradouro(self):
-        return self._logradouro
-
+    def logradouro(self): return self._logradouro
     @property
-    def regiao(self):
-        return self._regiao
-
+    def regiao(self): return self._regiao
     @property
-    def idade(self):
-        return self._idade
-
+    def idade(self): return self._idade
     @property
-    def cor_pele(self):
-        return self._cor_pele
-
-
-
+    def cor_pele(self): return self._cor_pele
