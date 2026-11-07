@@ -18,7 +18,6 @@ class BaseDadosPublicoRepository(ConexaoDB):
                     (ano_bo, data_ocorrencia, hora_ocorrencia, natureza_crime, descr_tipo_local, bairro, logradouro, regiao, idade, cor_pele) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             
-            # O executemany insere a lista completa em uma única transação ultra rápida
             cursor.executemany(sql, lista_valores)
             conexao.commit()
         except Exception as e:
