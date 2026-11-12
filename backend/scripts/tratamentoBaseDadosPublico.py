@@ -22,12 +22,9 @@ class TratatamentoBaseDadosPublicos:
             data_frame = self.abrir_Base()
             lote_dados = []
             data_frame = data_frame.astype(object).where(pd.notnull(data_frame), None)
-            # Instancia o repositório corretamente (2. CORRIGIDO)
             repo = BaseDadosPublicoRepository()
 
             for _, registro in data_frame.iterrows():
-                # Nota: Percebi que na sua variável 'regiao' você mapeou o 'ANO_BO' de novo por engano. 
-                # Se houver uma coluna de região no Excel, mude o texto entre colchetes abaixo:
                 registro_objeto = Registro(
                     ano_bo=registro["ANO_BO"],
                     data_ocorrencia=registro["DATA_OCORRENCIA_BO"],
@@ -40,8 +37,7 @@ class TratatamentoBaseDadosPublicos:
                     idade=registro["IDADE_PESSOA"],
                     cor_pele=registro["COR_CUTIS"]
                 )
-                
-                # Cria a tupla com os dados tratados e adiciona na lista do lote
+
                 valores = (
                     registro_objeto.ano_bo, registro_objeto.data_ocorrencia, registro_objeto.hora_ocorrencia,
                     registro_objeto.natureza_crime, registro_objeto.descr_tipo_local, registro_objeto.bairro,
@@ -49,7 +45,6 @@ class TratatamentoBaseDadosPublicos:
                 )
                 lote_dados.append(valores)
 
-            # Envia o lote de dados inteiro de uma vez só (3. OTIMIZADO)
             if lote_dados:
                 print(f"Enviando {len(lote_dados)} registros para o MySQL...")
                 repo.inserir_multiplos_registros(lote_dados)
@@ -58,13 +53,16 @@ class TratatamentoBaseDadosPublicos:
         except Exception as err:
             raise Exception(f"Falha no processamento: {err}")
 
-
-# Execution
 if __name__ == "__main__":
-    t = TratatamentoBaseDadosPublicos()
-    try:
-        print("Executando código...")
-        t.realizar_segmentacao_salvar_banco_dados()
-        print("Terminou! Confere aí no banco de dados.")
-    except Exception as e:
-        print(f"Ocorreu um erro no pipeline: {e}")
+    # t = TratatamentoBaseDadosPublicos()
+    # try:
+    #     print("Executando código...")
+    #     t.realizar_segmentacao_salvar_banco_dados()
+    #     print("Terminou! Confere aí no banco de dados.")
+    # except Exception as e:
+    #     print(f"Ocorreu um erro no pipeline: {e}")
+
+
+    Teste = BaseDadosPublicoRepository()
+    # print(Teste.calculando_quantos_registros_tivemos_agrupando_por_idade())
+    # print(Teste.tipos_de_natureza_crime()[0][0])
