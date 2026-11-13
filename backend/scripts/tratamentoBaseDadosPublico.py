@@ -65,4 +65,9 @@ if __name__ == "__main__":
 
     Teste = BaseDadosPublicoRepository()
     # print(Teste.calculando_quantos_registros_tivemos_agrupando_por_idade())
-    # print(Teste.tipos_de_natureza_crime()[0][0])
+    # print(Teste.tipos_de_natureza_crime())
+    # print(Teste.calculando_quantos_registros_para_cada_natureza_crime(2026))
+    # print(Teste.tipos_de_lugares(2024))
+    # print(Teste.cores_pele_vitimas())
+    # print(Teste.calculando_soma_registros_por_cor_pele_ano(2025))
+    print(Teste.analisando_qual_pediodo_dia_mais_perigoso(2025))

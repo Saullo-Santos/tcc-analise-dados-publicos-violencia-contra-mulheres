@@ -52,26 +52,6 @@ class BaseDadosPublicoRepository(ConexaoDB):
         except Exception as e:
             raise Exception(f"Erro na execução: {e}")
 
-    # def calculando_quantos_registros_tivemos_agrupando_por_idade(self):
-    #     query = """SELECT 
-    #         ano_bo,
-    #         CASE 
-    #             WHEN idade < 18 THEN 'Menores de 18'
-    #             WHEN idade BETWEEN 18 AND 60 THEN '18 a 60 anos'
-    #             ELSE 'Maior de 60'
-    #         END AS faixa_etaria,
-    #         COUNT(*) AS total_ocorrencias
-    #         FROM registros
-    #         WHERE ano_bo IN (2024, 2025, 2026)
-    #         GROUP BY ano_bo, faixa_etaria
-    #         ORDER BY ano_bo ASC, faixa_etaria;"""
-
-    #     try:
-    #         return self._estrutura_de_execucao_consulta(query)
-    #     except Exception as e:
-    #         raise Exception(f"Erro na execução: {e}")
-
-
     def calculando_quantos_registros_tivemos_agrupando_por_idade(self):
         query = """SELECT 
         ano_bo,
@@ -95,6 +75,86 @@ class BaseDadosPublicoRepository(ConexaoDB):
     def tipos_de_natureza_crime(self):
         query = "SELECT DISTINCT natureza_crime FROM registros ORDER BY natureza_crime ASC;"
         try:
-            return self._estrutura_de_execucao_consulta(query) #ajustar a forma de como os dados retornam.
+            resultados = self._estrutura_de_execucao_consulta(query)
+            resultados_return_list = []
+            for resultado in resultados:
+                resultados_return_list.append(resultado[0])
+
+            return tuple(resultados_return_list)
+
+        except Exception as e:
+            raise Exception(f"Erro na execução: {e}")
+
+    def calculando_quantos_registros_para_cada_natureza_crime(self, ano_filtragem):
+        query = """SELECT 
+                natureza_crime, 
+                COUNT(*) AS total_ocorrencias
+                FROM registros
+                WHERE ano_bo = %s
+                GROUP BY natureza_crime
+                ORDER BY total_ocorrencias DESC;"""
+        try:
+            return self._estrutura_de_execucao_consulta(query, ano_filtragem)
+        except Exception as e:
+            raise Exception(f"Erro na execução: {e}")
+
+    def tipos_de_lugares(self, ano_filtragem):
+        query = """SELECT 
+                descr_tipo_local, 
+                COUNT(*) AS total_ocorrencias
+                FROM registros
+                WHERE ano_bo = %s
+                GROUP BY descr_tipo_local
+                ORDER BY total_ocorrencias DESC;"""
+        try:
+            return self._estrutura_de_execucao_consulta(query, ano_filtragem)
+        except Exception as e:
+            raise Exception(f"Erro na execução: {e}")
+
+    def cores_pele_vitimas(self):
+        query = """SELECT DISTINCT cor_pele
+                FROM registros
+                ORDER BY cor_pele ASC;"""
+        try:
+            resultados = self._estrutura_de_execucao_consulta(query)
+            resultados_return_list = []
+            for resultado in resultados:
+                resultados_return_list.append(resultado[0])
+            
+            return tuple(resultados_return_list)
+            
+        except Exception as e:
+            raise Exception(f"Erro na execução: {e}")
+
+    def calculando_soma_registros_por_cor_pele_ano(self,ano_bo):
+        query = """SELECT 
+                cor_pele, 
+                COUNT(*) AS total_casos
+                FROM registros
+                WHERE ano_bo = %s
+                GROUP BY cor_pele
+                ORDER BY total_casos DESC;"""
+        try:
+            return self._estrutura_de_execucao_consulta(query, ano_bo)
+        except Exception as e:
+            raise Exception(f"Erro na execução: {e}")
+
+    def analisando_qual_pediodo_dia_mais_perigoso(self, ano_bo):
+        query = """SELECT 
+                ano_bo,
+                CASE 
+                    WHEN HOUR(hora_ocorrencia) BETWEEN 0 AND 5 THEN 'Madrugada'
+                    WHEN HOUR(hora_ocorrencia) BETWEEN 6 AND 11 THEN 'Manhã'
+                    WHEN HOUR(hora_ocorrencia) BETWEEN 12 AND 17 THEN 'Tarde'
+                    WHEN HOUR(hora_ocorrencia) BETWEEN 18 AND 23 THEN 'Noite'
+                    ELSE 'Não informado'
+                END AS periodo_dia,
+                COUNT(*) AS total_registros
+                FROM registros
+                WHERE ano_bo = %s
+                GROUP BY ano_bo, periodo_dia
+                ORDER BY total_registros DESC;"""
+        try:
+            return self._estrutura_de_execucao_consulta(query, ano_bo)
         except Exception as e:
             raise Exception(f"Erro na execução: {e}")

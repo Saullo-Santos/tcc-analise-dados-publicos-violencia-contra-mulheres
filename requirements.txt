@@ -1,6 +1,7 @@
 pandas
 PyMySQL
 dotenv
-"fastapi[standard]"
+fastapi[standard]
 openpyxl
+fastapi uvicorn pymysql
 
